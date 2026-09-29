@@ -1,0 +1,2952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Analyzer - AI-Powered ATS Resume Scanner & Score</title>
+  <meta name="description" content="State-of-the-art Resume Analyzer and ATS Optimization Dashboard. Analyze resume scores, ATS compatibility, keywords, and job matching in real time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       CSS Variables & Design Tokens (Modern SaaS Palette)
+       ========================================================================== */
+    :root {
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Primary & Accents */
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-glow: rgba(79, 70, 229, 0.22);
+      
+      --accent: #06b6d4;
+      --accent-light: #ecfeff;
+      
+      /* Status Colors */
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --info: #3b82f6;
+      --info-light: #eff6ff;
+
+      /* Neutrals & Surfaces (Light Theme) */
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-elevated: #ffffff;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      
+      --border-color: #e2e8f0;
+      --border-focus: #818cf8;
+      
+      --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      --sidebar-width: 260px;
+      --header-height: 72px;
+      --transition-fast: 0.18s ease;
+      --transition-smooth: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Dark Mode Theme */
+    [data-theme="dark"] {
+      --bg-base: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: #131c31;
+      --bg-subtle: #1e293b;
+      --bg-elevated: #1e293b;
+
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+
+      --border-color: #1e293b;
+      --border-focus: #6366f1;
+
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --accent-light: rgba(6, 182, 212, 0.15);
+      --success-light: rgba(16, 185, 129, 0.15);
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --info-light: rgba(59, 130, 246, 0.15);
+
+      --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.45);
+      --shadow-xl: 0 20px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    /* ==========================================================================
+       Reset & Base Styles
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      font-size: 14.5px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color var(--transition-smooth), color var(--transition-smooth);
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-subtle);
+    }
+
+    /* ==========================================================================
+       App Layout
+       ========================================================================== */
+    .app-container {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 40;
+      transition: transform var(--transition-smooth), width var(--transition-smooth);
+    }
+
+    .sidebar-brand {
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 12px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      padding: 20px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      letter-spacing: 0.08em;
+      padding: 10px 12px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: 1px solid transparent;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      color: var(--text-main);
+      background: var(--bg-subtle);
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: -14px;
+      top: 20%;
+      height: 60%;
+      width: 4px;
+      background: var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .nav-counter {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+    }
+
+    .pro-banner {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0.12) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pro-banner h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pro-banner p {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Main Content Wrapper */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      background: var(--bg-base);
+    }
+
+    /* Header */
+    .top-header {
+      height: var(--header-height);
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .page-heading h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .page-heading p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: all var(--transition-fast);
+    }
+
+    .icon-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-subtle);
+      border-color: var(--text-subtle);
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: var(--danger);
+      box-shadow: 0 0 0 2px var(--bg-card);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #f59e0b, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25);
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Content Body */
+    .content-body {
+      padding: 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Top Action Bar */
+    .action-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .action-banner-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sample-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: var(--text-subtle);
+    }
+
+    .btn-outline-primary {
+      background: transparent;
+      color: var(--primary);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-outline-primary:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    /* ==========================================================================
+       Upload Section (Hero Drag-and-Drop)
+       ========================================================================== */
+    .upload-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .upload-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preset-dropdown-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .preset-select {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .dropzone-area {
+      border: 2px dashed #c7d2fe;
+      background: linear-gradient(180deg, rgba(238, 242, 255, 0.35) 0%, rgba(248, 250, 252, 0.6) 100%);
+      border-radius: var(--radius-lg);
+      padding: 44px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-smooth);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    [data-theme="dark"] .dropzone-area {
+      border-color: #3730a3;
+      background: linear-gradient(180deg, rgba(79, 70, 229, 0.05) 0%, rgba(15, 23, 42, 0.5) 100%);
+    }
+
+    .dropzone-area.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      transform: scale(1.006);
+    }
+
+    .dropzone-icon-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-full);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 16px;
+      transition: transform var(--transition-smooth);
+    }
+
+    .dropzone-area:hover .dropzone-icon-ring {
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    .dropzone-prompt h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .dropzone-prompt p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .supported-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .file-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .file-badge.pdf {
+      color: #dc2626;
+      border-color: rgba(220, 38, 38, 0.2);
+      background: rgba(220, 38, 38, 0.04);
+    }
+
+    .file-badge.docx {
+      color: #2563eb;
+      border-color: rgba(37, 99, 235, 0.2);
+      background: rgba(37, 99, 235, 0.04);
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+
+    /* Active File Preview Card */
+    .file-preview-strip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-top: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .file-preview-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .file-preview-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: #ef4444;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .file-preview-info h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .file-preview-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Scanning Animation Bar */
+    .scanner-progress-container {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .scanner-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* ==========================================================================
+       Dashboard Overview: Score Metrics Cards
+       ========================================================================== */
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .scores-grid {
+      display: grid;
+      grid-template-columns: 1.35fr repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .score-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Overall Hero Score Card */
+    .score-card-hero {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(99, 102, 241, 0.05) 100%);
+      border-color: rgba(99, 102, 241, 0.3);
+      position: relative;
+    }
+
+    .score-card-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .hero-score-layout {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Circular SVG Gauge */
+    .gauge-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: var(--bg-subtle);
+      stroke-width: 8;
+    }
+
+    .gauge-val {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 264;
+      stroke-dashoffset: 40;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s;
+    }
+
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .gauge-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--text-main);
+    }
+
+    .gauge-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .hero-score-details h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .hero-score-details p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+    }
+
+    .score-badge.high {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .score-badge.medium {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .score-badge.low {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    /* Small Score Cards */
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .metric-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .metric-icon.ats {
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--accent);
+    }
+    .metric-icon.skills {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+    }
+    .metric-icon.experience {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warning);
+    }
+    .metric-icon.format {
+      background: rgba(139, 92, 246, 0.12);
+      color: #8b5cf6;
+    }
+
+    .metric-meta {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-subtle);
+    }
+
+    .metric-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .metric-number {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-denom {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .metric-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .mini-progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 1s ease;
+    }
+
+    /* ==========================================================================
+       Dashboard Main Split: Left Analysis vs Right Insights
+       ========================================================================== */
+    .dashboard-split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Resume Summary Box */
+    .resume-summary-box {
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      border-left: 3px solid var(--primary);
+    }
+
+    .candidate-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .candidate-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .candidate-target {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .summary-text {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Skills Pill Containers */
+    .skills-block {
+      margin-bottom: 22px;
+    }
+
+    .skills-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .skills-block-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skills-pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      transition: all var(--transition-fast);
+      cursor: default;
+    }
+
+    .skill-pill.detected {
+      background: var(--success-light);
+      color: #065f46;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    [data-theme="dark"] .skill-pill.detected {
+      color: #34d399;
+    }
+
+    .skill-pill.missing {
+      background: var(--danger-light);
+      color: #991b1b;
+      border: 1px dashed rgba(239, 68, 68, 0.35);
+    }
+
+    [data-theme="dark"] .skill-pill.missing {
+      color: #f87171;
+    }
+
+    .skill-pill:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Strengths & Improvements List */
+    .feedback-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feedback-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border: 1px solid transparent;
+      transition: border-color var(--transition-fast);
+    }
+
+    .feedback-item:hover {
+      border-color: var(--border-color);
+    }
+
+    .feedback-icon-box {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .feedback-icon-box.strength {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .feedback-icon-box.improvement {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .feedback-content h5 {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .feedback-content p {
+      font-size: 0.79rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ATS Keywords Table / Grid */
+    .keywords-cloud {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .keyword-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all var(--transition-fast);
+    }
+
+    .keyword-card:hover {
+      border-color: var(--primary);
+    }
+
+    .kw-term {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .kw-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .kw-status {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+    }
+
+    .kw-status.found {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .kw-status.suggested {
+      background: var(--info-light);
+      color: var(--info);
+    }
+
+    /* Recommended Job Roles */
+    .roles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .role-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-fast);
+    }
+
+    .role-card:hover {
+      border-color: var(--primary);
+      transform: translateX(3px);
+    }
+
+    .role-info h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .role-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .role-match-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .match-pct {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .match-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* History & Settings Views */
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .history-table-container {
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .history-table th {
+      padding: 14px 20px;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .history-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .history-table tr:hover td {
+      background: var(--bg-subtle);
+    }
+
+    /* Settings Form */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 46px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--border-color);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--text-main);
+      color: var(--bg-surface);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideUp 0.3s ease forwards;
+      pointer-events: auto;
+    }
+
+    .toast svg {
+      width: 18px;
+      height: 18px;
+      color: var(--success);
+    }
+
+    /* Overlay for mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 35;
+      backdrop-filter: blur(2px);
+    }
+
+    /* Print Styles for Download / Print Report */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .sidebar, .top-header, .action-banner, .upload-card, .btn, .icon-btn, .history-table-container, .settings-grid {
+        display: none !important;
+      }
+      .main-wrapper {
+        margin-left: 0 !important;
+      }
+      .content-body {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .card, .score-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseScan {
+      0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+    }
+
+    .scanning-active {
+      animation: pulseScan 1.5s infinite;
+      border-color: var(--primary) !important;
+    }
+
+    /* ==========================================================================
+       Responsive Breakpoints
+       ========================================================================== */
+    @media (max-width: 1200px) {
+      .scores-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .score-card-hero {
+        grid-column: span 2;
+      }
+      .dashboard-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-overlay.active {
+        display: block;
+      }
+      .main-wrapper {
+        margin-left: 0;
+      }
+      .mobile-menu-toggle {
+        display: flex;
+      }
+      .top-header {
+        padding: 0 18px;
+      }
+      .content-body {
+        padding: 20px 16px;
+      }
+      .user-info {
+        display: none;
+      }
+      .scores-grid {
+        grid-template-columns: 1fr;
+      }
+      .score-card-hero {
+        grid-column: span 1;
+      }
+      .dropzone-area {
+        padding: 30px 16px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="app-container">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+
+    <!-- ========================================================================
+         Sidebar Navigation
+         ======================================================================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo-icon">
+          <!-- Document Scanner Icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">Resume Analyzer</span>
+        </div>
+        <span class="brand-badge">PRO</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Main Menu</span>
+        
+        <a class="nav-item active" id="nav-dashboard" onclick="switchView('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a class="nav-item" id="nav-analyze" onclick="switchView('analyze')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span>Analyze Resume</span>
+          <span class="nav-counter">New</span>
+        </a>
+
+        <a class="nav-item" id="nav-history" onclick="switchView('history')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>History</span>
+          <span class="nav-counter" id="historyCounter">3</span>
+        </a>
+
+        <span class="nav-section-label">Configuration</span>
+
+        <a class="nav-item" id="nav-settings" onclick="switchView('settings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="pro-banner">
+          <h4>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            ATS Precision Engine
+          </h4>
+          <p>Scanning matching algorithms against Fortune 500 ATS standards.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========================================================================
+         Main Content Area
+         ======================================================================== -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" onclick="toggleSidebar(true)" aria-label="Open navigation menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="page-heading">
+            <h1 id="headerTitle">Resume Analysis & Intelligence</h1>
+            <p id="headerSubtitle">Real-time candidate compatibility & ATS benchmark report</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="header-actions">
+            <!-- Theme Toggle Button -->
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle dark/light mode">
+              <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+
+            <!-- Notifications Icon -->
+            <button class="icon-btn" onclick="showToast('You have 2 new optimization suggestions!')" title="Notifications" aria-label="View notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="badge-dot"></span>
+            </button>
+          </div>
+
+          <!-- User Profile -->
+          <div class="user-profile" onclick="showToast('Signed in as Senior Talent Analyst')">
+            <div class="user-avatar">ZK</div>
+            <div class="user-info">
+              <span class="user-name">Zainab Khan</span>
+              <span class="user-role">Recruitment Lead</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Body Container -->
+      <main class="content-body">
+        
+        <!-- ====================================================================
+             View: Dashboard & Analyze
+             ==================================================================== -->
+        <div id="view-dashboard" class="view-section active">
+          
+          <!-- Quick Status & Download Bar -->
+          <div class="action-banner">
+            <div class="action-banner-info">
+              <span class="sample-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Current Benchmark
+              </span>
+              <div>
+                <strong id="activeResumeTitle">Alex Morgan - Senior Full Stack Engineer.pdf</strong>
+                <div style="font-size: 0.77rem; color: var(--text-muted);">Last parsed: Just now • ATS Model v4.2</div>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-secondary" onclick="loadSampleResume('alex')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+                Reload Sample
+              </button>
+              <button class="btn btn-primary" onclick="downloadReport()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Drag and Drop Resume Upload Area -->
+          <section class="upload-card" id="uploadSection" style="margin-top: 24px;">
+            <div class="upload-header">
+              <div>
+                <h2 class="upload-title">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path d="M12 18v-6"></path>
+                    <path d="m9 15 3-3 3 3"></path>
+                  </svg>
+                  Resume Ingestion & Analysis
+                </h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                  Upload candidate CV to evaluate score, keyword density, and system parseability.
+                </p>
+              </div>
+
+              <!-- Preset Sample Switcher -->
+              <div class="preset-dropdown-container">
+                <span>Test with presets:</span>
+                <select class="preset-select" id="presetSelect" onchange="handlePresetChange(this.value)">
+                  <option value="alex">Alex Morgan (Full Stack 87/100)</option>
+                  <option value="sarah">Sarah Chen (Product Lead 94/100)</option>
+                  <option value="marcus">Marcus Vance (Junior Dev 62/100)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Drop Zone Area -->
+            <div class="dropzone-area" id="dropZone" onclick="triggerFileInput()">
+              <input type="file" id="resumeFileInput" class="file-input-hidden" accept=".pdf,.docx,.doc" onchange="handleFileSelected(event)">
+              
+              <div class="dropzone-icon-ring">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+
+              <div class="dropzone-prompt">
+                <h3>Drag & Drop your resume here</h3>
+                <p>or click to browse from your device</p>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 6px;">
+                  <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); triggerFileInput();">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Choose Resume
+                  </button>
+                  <button type="button" class="btn btn-primary" id="btnAnalyzeDirect" onclick="event.stopPropagation(); analyzeCurrentResume();">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Analyze Resume
+                  </button>
+                </div>
+              </div>
+
+              <div class="supported-badges">
+                <span class="file-badge pdf">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  </svg>
+                  PDF (.pdf)
+                </span>
+                <span class="file-badge docx">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  </svg>
+                  Word (.docx, .doc)
+                </span>
+                <span style="font-size: 0.75rem; color: var(--text-subtle);">Max 15MB file size</span>
+              </div>
+            </div>
+
+            <!-- Uploaded File Summary Strip -->
+            <div class="file-preview-strip" id="filePreviewStrip">
+              <div class="file-preview-left">
+                <div class="file-preview-icon" id="previewExtBadge">PDF</div>
+                <div class="file-preview-info">
+                  <h4 id="previewFileName">Alex_Morgan_Resume_2026.pdf</h4>
+                  <p>
+                    <span id="previewFileSize">1.4 MB</span> • 
+                    <span style="color: var(--success); font-weight: 600;">Ready for AI Extraction</span>
+                  </p>
+                </div>
+              </div>
+              <div class="file-preview-actions">
+                <button class="btn btn-outline-primary" onclick="analyzeCurrentResume()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                  </svg>
+                  Run Deep Scan
+                </button>
+              </div>
+            </div>
+
+            <!-- Scanner Progress Bar during analysis -->
+            <div class="scanner-progress-container" id="scannerProgress">
+              <div class="scanner-label">
+                <span id="scannerStatusText">Scanning parsing structures & ATS token index...</span>
+                <span id="scannerPct">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-bar-fill" id="scannerFill"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               Analysis Dashboard Cards Grid
+               ================================================================== -->
+          <div style="margin-top: 28px;">
+            <div class="section-title-wrap">
+              <div>
+                <h2 class="section-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 14 14"></polyline>
+                  </svg>
+                  Evaluation Metrics
+                </h2>
+                <p class="section-subtitle">Real-time breakdown of candidate market competitiveness</p>
+              </div>
+              <span class="score-badge high" id="marketFitBadge">Top 10% Candidate</span>
+            </div>
+
+            <div class="scores-grid">
+              
+              <!-- 1. Overall Resume Score Hero -->
+              <div class="score-card score-card-hero">
+                <div class="hero-score-layout">
+                  <div class="gauge-wrapper">
+                    <svg class="gauge-svg" viewBox="0 0 100 100">
+                      <circle class="gauge-bg" cx="50" cy="50" r="42"></circle>
+                      <circle class="gauge-val" id="gaugeCircle" cx="50" cy="50" r="42"></circle>
+                    </svg>
+                    <div class="gauge-center">
+                      <span class="gauge-number" id="overallScoreVal">87</span>
+                      <span class="gauge-label">Score</span>
+                    </div>
+                  </div>
+                  <div class="hero-score-details">
+                    <h3>Overall Resume Score</h3>
+                    <p id="overallVerdictText">Exceptional profile. High match with senior engineering criteria.</p>
+                    <span class="score-badge high" id="overallStatusBadge">Excellent Match</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. ATS Compatibility Score -->
+              <div class="score-card">
+                <div>
+                  <div class="metric-top">
+                    <div class="metric-icon ats">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                      </svg>
+                    </div>
+                    <span class="metric-meta">Parser Friendly</span>
+                  </div>
+                  <div class="metric-value-row">
+                    <span class="metric-number" id="atsScoreVal">92</span>
+                    <span class="metric-denom">/100</span>
+                  </div>
+                  <div class="metric-name">ATS Compatibility</div>
+                </div>
+                <div class="mini-progress-track">
+                  <div class="mini-progress-fill" id="atsProgressFill" style="width: 92%; background: var(--accent);"></div>
+                </div>
+              </div>
+
+              <!-- 3. Skills Match Score -->
+              <div class="score-card">
+                <div>
+                  <div class="metric-top">
+                    <div class="metric-icon skills">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                      </svg>
+                    </div>
+                    <span class="metric-meta">Tech Stack</span>
+                  </div>
+                  <div class="metric-value-row">
+                    <span class="metric-number" id="skillsScoreVal">85</span>
+                    <span class="metric-denom">/100</span>
+                  </div>
+                  <div class="metric-name">Skills Match</div>
+                </div>
+                <div class="mini-progress-track">
+                  <div class="mini-progress-fill" id="skillsProgressFill" style="width: 85%; background: var(--success);"></div>
+                </div>
+              </div>
+
+              <!-- 4. Experience Score -->
+              <div class="score-card">
+                <div>
+                  <div class="metric-top">
+                    <div class="metric-icon experience">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                      </svg>
+                    </div>
+                    <span class="metric-meta">Impact & Roles</span>
+                  </div>
+                  <div class="metric-value-row">
+                    <span class="metric-number" id="expScoreVal">88</span>
+                    <span class="metric-denom">/100</span>
+                  </div>
+                  <div class="metric-name">Experience Score</div>
+                </div>
+                <div class="mini-progress-track">
+                  <div class="mini-progress-fill" id="expProgressFill" style="width: 88%; background: var(--warning);"></div>
+                </div>
+              </div>
+
+              <!-- 5. Formatting Score -->
+              <div class="score-card">
+                <div>
+                  <div class="metric-top">
+                    <div class="metric-icon format">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="21" y1="10" x2="3" y2="10"></line>
+                        <line x1="21" y1="6" x2="3" y2="6"></line>
+                        <line x1="21" y1="14" x2="3" y2="14"></line>
+                        <line x1="21" y1="18" x2="3" y2="18"></line>
+                      </svg>
+                    </div>
+                    <span class="metric-meta">Layout & Fonts</span>
+                  </div>
+                  <div class="metric-value-row">
+                    <span class="metric-number" id="formatScoreVal">90</span>
+                    <span class="metric-denom">/100</span>
+                  </div>
+                  <div class="metric-name">Formatting Score</div>
+                </div>
+                <div class="mini-progress-track">
+                  <div class="mini-progress-fill" id="formatProgressFill" style="width: 90%; background: #8b5cf6;"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ==================================================================
+               Detailed Split Section: Summary, Skills, Strengths, Keywords
+               ================================================================== -->
+          <div class="dashboard-split" style="margin-top: 28px;">
+            
+            <!-- Left Column: Summary, Detected Skills, Missing Skills, Recommended Roles -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+              
+              <!-- Resume Summary -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Resume Summary
+                  </h3>
+                  <span class="card-subtitle">AI Executive Digest</span>
+                </div>
+
+                <div class="resume-summary-box">
+                  <div class="candidate-header">
+                    <span class="candidate-name" id="candidateName">Alex Morgan</span>
+                    <span class="candidate-target" id="candidateRoleTitle">Senior Full Stack Engineer (7+ yrs)</span>
+                  </div>
+                  <p class="summary-text" id="candidateSummaryText">
+                    Accomplished Full Stack Software Engineer with extensive expertise in modern cloud architectures, scalable microservices, and React/Node ecosystems. Proven track record leading distributed development squads, reducing API latency by 42%, and architecting enterprise SaaS platforms processing over 12M requests daily.
+                  </p>
+                </div>
+
+                <!-- Detected Skills -->
+                <div class="skills-block">
+                  <div class="skills-block-header">
+                    <span class="skills-block-title" style="color: var(--success);">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Detected Skills (<span id="detectedCount">9</span>)
+                    </span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Verified in Experience section</span>
+                  </div>
+                  <div class="skills-pills-wrap" id="detectedSkillsWrap">
+                    <!-- Injected dynamically -->
+                  </div>
+                </div>
+
+                <!-- Missing Skills -->
+                <div class="skills-block" style="margin-bottom: 0;">
+                  <div class="skills-block-header">
+                    <span class="skills-block-title" style="color: var(--danger);">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                      Missing / Recommended Skills (<span id="missingCount">4</span>)
+                    </span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">High market demand</span>
+                  </div>
+                  <div class="skills-pills-wrap" id="missingSkillsWrap">
+                    <!-- Injected dynamically -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommended Job Roles -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                      <circle cx="12" cy="12" r="2"></circle>
+                      <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
+                    </svg>
+                    Recommended Job Roles
+                  </h3>
+                  <span class="card-subtitle">Algorithmic Title Alignment</span>
+                </div>
+
+                <div class="roles-list" id="rolesListWrap">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Column: Strengths, Areas for Improvement, ATS Keywords -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+              
+              <!-- Strengths -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title" style="color: var(--success);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Candidate Strengths
+                  </h3>
+                  <span class="card-subtitle">Verified Highlights</span>
+                </div>
+                <ul class="feedback-list" id="strengthsList">
+                  <!-- Injected dynamically -->
+                </ul>
+              </div>
+
+              <!-- Areas for Improvement -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title" style="color: var(--warning);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Areas for Improvement
+                  </h3>
+                  <span class="card-subtitle">Actionable Recommendations</span>
+                </div>
+                <ul class="feedback-list" id="improvementsList">
+                  <!-- Injected dynamically -->
+                </ul>
+              </div>
+
+              <!-- ATS Keywords Cloud -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="9" y1="3" x2="9" y2="21"></line>
+                    </svg>
+                    ATS Keywords & Frequency
+                  </h3>
+                  <span class="card-subtitle">Frequency Benchmark</span>
+                </div>
+                <div class="keywords-cloud" id="keywordsCloudWrap">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ====================================================================
+             View: History
+             ==================================================================== -->
+        <div id="view-history" class="view-section">
+          <div class="section-title-wrap">
+            <div>
+              <h2 class="section-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Resume Parsing History
+              </h2>
+              <p class="section-subtitle">Archive of past applicant evaluations and compatibility checks</p>
+            </div>
+            <button class="btn btn-secondary" onclick="clearHistory()">Clear History</button>
+          </div>
+
+          <div class="history-table-container" style="margin-top: 16px;">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Candidate / File</th>
+                  <th>Target Position</th>
+                  <th>Overall Score</th>
+                  <th>ATS Match</th>
+                  <th>Date Analyzed</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             View: Settings
+             ==================================================================== -->
+        <div id="view-settings" class="view-section">
+          <div class="section-title-wrap">
+            <div>
+              <h2 class="section-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Scanner Configuration
+              </h2>
+              <p class="section-subtitle">Fine-tune ATS criteria, parsing tolerance, and interface preferences</p>
+            </div>
+          </div>
+
+          <div class="settings-grid" style="margin-top: 16px;">
+            <div class="setting-item">
+              <div>
+                <strong style="display: block; font-size: 0.92rem;">Dark Mode Theme</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Switch between sleek dark and clean light modes</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingsThemeToggle" onchange="toggleTheme()">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <strong style="display: block; font-size: 0.92rem;">Strict ATS Parsing Model</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Enforce Taleo & Workday exact keyword criteria</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('ATS Strict Mode Updated')">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <strong style="display: block; font-size: 0.92rem;">Deep Quantifiable Impact Detection</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Flag bullet points lacking metrics and percentages</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Impact Detection Enabled')">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <strong style="display: block; font-size: 0.92rem;">Auto Download PDF Summary</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Automatically print report upon completed scan</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="showToast('Preference Saved')">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==========================================================================
+       Vanilla JavaScript Logic
+       ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       Resume Datasets (Presets for instant rich demonstration)
+       ========================================================================== */
+    const RESUME_PRESETS = {
+      alex: {
+        fileName: "Alex_Morgan_Senior_FullStack_Resume.pdf",
+        fileSize: "1.4 MB",
+        candidateName: "Alex Morgan",
+        roleTitle: "Senior Full Stack Engineer (7+ Years)",
+        summary: "Accomplished Full Stack Software Engineer with extensive expertise in modern cloud architectures, scalable microservices, and React/Node ecosystems. Proven track record leading distributed development squads, reducing API latency by 42%, and architecting enterprise SaaS platforms processing over 12M requests daily.",
+        overallScore: 87,
+        atsScore: 92,
+        skillsScore: 85,
+        experienceScore: 88,
+        formattingScore: 90,
+        verdict: "Exceptional profile. High match with senior engineering criteria.",
+        marketFit: "Top 10% Candidate",
+        statusBadge: "Excellent Match",
+        detectedSkills: [
+          "React.js", "TypeScript", "Node.js", "Next.js", "PostgreSQL",
+          "AWS (Lambda, S3)", "Docker", "GraphQL", "Tailwind CSS", "CI/CD Pipelines", "System Design"
+        ],
+        missingSkills: [
+          "Kubernetes", "Redis Caching", "Apache Kafka", "Terraform / IaC"
+        ],
+        strengths: [
+          {
+            title: "Strong Quantifiable Achievements",
+            desc: "Highlights measurable impact across projects (e.g. 'reduced latency by 42%', '12M daily requests')."
+          },
+          {
+            title: "Modern In-Demand Stack",
+            desc: "Demonstrates production mastery of TypeScript, Next.js, and cloud microservices."
+          },
+          {
+            title: "Clean ATS Structural Hierarchy",
+            desc: "Standard bulleted sections, high-contrast headings, and zero unparsable text boxes."
+          }
+        ],
+        improvements: [
+          {
+            title: "Add Container Orchestration Proof",
+            desc: "Include hands-on Kubernetes or Helm deployment experience for higher cloud tier roles."
+          },
+          {
+            title: "Highlight Message Broker Usage",
+            desc: "Add event-driven architecture examples with RabbitMQ or Kafka to solidify senior backend parity."
+          }
+        ],
+        keywords: [
+          { term: "TypeScript", count: "14x", status: "found" },
+          { term: "React", count: "11x", status: "found" },
+          { term: "Microservices", count: "6x", status: "found" },
+          { term: "AWS Cloud", count: "8x", status: "found" },
+          { term: "CI/CD", count: "4x", status: "found" },
+          { term: "Kubernetes", count: "0x", status: "suggested" },
+          { term: "Kafka", count: "0x", status: "suggested" },
+          { term: "Unit Testing", count: "3x", status: "found" }
+        ],
+        recommendedRoles: [
+          { role: "Senior Full Stack Engineer", match: "96%", desc: "Ideal match for Next.js, Node & Cloud workflows" },
+          { role: "Lead Frontend Architect", match: "91%", desc: "High alignment with design systems & component architecture" },
+          { role: "Staff Software Engineer", match: "84%", desc: "Recommended with additional distributed systems scale" }
+        ]
+      },
+      sarah: {
+        fileName: "Sarah_Chen_Principal_Product_Manager.docx",
+        fileSize: "2.1 MB",
+        candidateName: "Sarah Chen",
+        roleTitle: "Principal Product Manager (9+ Years)",
+        summary: "Data-driven Product Leader recognized for driving 0-to-1 product strategies, scaling B2B SaaS ARR from $4M to $26M, and mentoring cross-functional groups of 25+ product designers and engineers.",
+        overallScore: 94,
+        atsScore: 96,
+        skillsScore: 92,
+        experienceScore: 95,
+        formattingScore: 93,
+        verdict: "Top-tier executive level resume. Flawless ATS keyword distribution.",
+        marketFit: "Top 3% Candidate",
+        statusBadge: "Outstanding Match",
+        detectedSkills: [
+          "Product Strategy", "User Research", "Agile & Scrum", "A/B Testing", 
+          "PLG (Product-Led Growth)", "SQL & Mixpanel", "Roadmapping", "Go-To-Market (GTM)", "OKRs"
+        ],
+        missingSkills: [
+          "Figma Prototyping", "Technical API Specs"
+        ],
+        strengths: [
+          {
+            title: "Superb Revenue & ARR Metrics",
+            desc: "Documents exact revenue trajectory ($4M to $26M) and churn reductions."
+          },
+          {
+            title: "Cross-Functional Leadership",
+            desc: "Clearly frames team building, cross-department alignment, and board presentations."
+          }
+        ],
+        improvements: [
+          {
+            title: "Deepen Technical Depth",
+            desc: "Add brief notes on technical architecture constraints handled with engineering leads."
+          }
+        ],
+        keywords: [
+          { term: "Product Strategy", count: "16x", status: "found" },
+          { term: "PLG Growth", count: "8x", status: "found" },
+          { term: "Roadmap", count: "12x", status: "found" },
+          { term: "ARR Expansion", count: "5x", status: "found" },
+          { term: "Agile Scrum", count: "7x", status: "found" },
+          { term: "API Integration", count: "1x", status: "suggested" }
+        ],
+        recommendedRoles: [
+          { role: "Director of Product Management", match: "97%", desc: "Direct match for SaaS product leadership" },
+          { role: "Head of Growth", match: "92%", desc: "Proven track record in acquisition and funnel economics" },
+          { role: "VP of Product", match: "88%", desc: "Strong candidacy for scale-ups" }
+        ]
+      },
+      marcus: {
+        fileName: "Marcus_Vance_Junior_Web_Dev.pdf",
+        fileSize: "890 KB",
+        candidateName: "Marcus Vance",
+        roleTitle: "Junior Frontend Developer (1.5 Years)",
+        summary: "Enthusiastic Junior Web Developer with practical foundations in HTML5, CSS3, JavaScript (ES6+), and responsive UI building. Eager to contribute to collaborative engineering teams and expand backend fundamentals.",
+        overallScore: 62,
+        atsScore: 71,
+        skillsScore: 58,
+        experienceScore: 55,
+        formattingScore: 68,
+        verdict: "Promising entry profile. Needs metric-driven bullets and key libraries.",
+        marketFit: "Emerging Candidate",
+        statusBadge: "Needs Optimization",
+        detectedSkills: [
+          "HTML5", "CSS3", "JavaScript (ES6)", "Git / GitHub", "Responsive Web Design", "Bootstrap"
+        ],
+        missingSkills: [
+          "TypeScript", "React or Vue.js", "REST APIs / Fetch", "State Management", "Testing (Jest)"
+        ],
+        strengths: [
+          {
+            title: "Clear Core Web Foundations",
+            desc: "Solid mastery of semantic HTML structure, CSS layouts, and modern vanilla JS."
+          },
+          {
+            title: "Active Open Source Portfolio",
+            desc: "Includes GitHub repository links with clean commit history."
+          }
+        ],
+        improvements: [
+          {
+            title: "Incorporate TypeScript & Frameworks",
+            desc: "Modern ATS systems heavily filter for React, Next.js, or TypeScript credentials."
+          },
+          {
+            title: "Quantify Project Outcomes",
+            desc: "Transform descriptive duties into metric results (e.g. 'boosted mobile page speed by 35%')."
+          }
+        ],
+        keywords: [
+          { term: "JavaScript", count: "9x", status: "found" },
+          { term: "HTML/CSS", count: "11x", status: "found" },
+          { term: "Git", count: "5x", status: "found" },
+          { term: "TypeScript", count: "0x", status: "suggested" },
+          { term: "React", count: "0x", status: "suggested" },
+          { term: "Webpack", count: "0x", status: "suggested" }
+        ],
+        recommendedRoles: [
+          { role: "Junior Frontend Developer", match: "78%", desc: "Good fit for web agencies and junior UI roles" },
+          { role: "Web Content Specialist", match: "82%", desc: "Strong HTML/CSS and CMS alignment" },
+          { role: "Full Stack Apprentice", match: "70%", desc: "Requires TypeScript and database training" }
+        ]
+      }
+    };
+
+    let currentDataset = RESUME_PRESETS.alex;
+    let historyData = [
+      { name: "Alex Morgan", file: "Alex_Morgan_Resume.pdf", role: "Senior Full Stack Engineer", score: 87, ats: 92, date: "Today, 10:14 AM" },
+      { name: "Sarah Chen", file: "Sarah_Chen_PM.docx", role: "Principal Product Manager", score: 94, ats: 96, date: "Yesterday, 4:30 PM" },
+      { name: "David Kim", file: "David_Kim_DevOps.pdf", role: "Cloud DevOps Specialist", score: 81, ats: 85, date: "Sep 26, 2026" }
+    ];
+
+    /* ==========================================================================
+       Initialization
+       ========================================================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      renderDashboard(currentDataset);
+      renderHistoryTable();
+      setupDragAndDrop();
+    });
+
+    /* ==========================================================================
+       View Routing / Navigation
+       ========================================================================== */
+    function switchView(viewName) {
+      // Manage nav classes
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const activeNav = document.getElementById(`nav-${viewName}`);
+      if (activeNav) activeNav.classList.add('active');
+
+      // Manage view sections
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'dashboard' || viewName === 'analyze') {
+        document.getElementById('view-dashboard').classList.add('active');
+        document.getElementById('headerTitle').textContent = viewName === 'analyze' ? "Analyze & Scan Resume" : "Resume Analysis & Intelligence";
+        document.getElementById('headerSubtitle').textContent = "Real-time candidate compatibility & ATS benchmark report";
+        
+        if (viewName === 'analyze') {
+          // Scroll upload card into view smoothly
+          document.getElementById('uploadSection').scrollIntoView({ behavior: 'smooth' });
+        }
+      } else if (viewName === 'history') {
+        document.getElementById('view-history').classList.add('active');
+        document.getElementById('headerTitle').textContent = "Resume History";
+        document.getElementById('headerSubtitle').textContent = "Comprehensive log of parsed documents and match results";
+      } else if (viewName === 'settings') {
+        document.getElementById('view-settings').classList.add('active');
+        document.getElementById('headerTitle').textContent = "System Preferences";
+        document.getElementById('headerSubtitle').textContent = "Configure ATS tolerances, output preferences, and themes";
+      }
+
+      // Close mobile sidebar if open
+      toggleSidebar(false);
+    }
+
+    function toggleSidebar(forceState) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (forceState !== undefined) {
+        if (forceState) {
+          sidebar.classList.add('open');
+          overlay.classList.add('active');
+        } else {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      } else {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+      }
+    }
+
+    /* ==========================================================================
+       Render Dashboard with Data
+       ========================================================================== */
+    function renderDashboard(data) {
+      // Titles and Summary
+      document.getElementById('activeResumeTitle').textContent = data.fileName;
+      document.getElementById('candidateName').textContent = data.candidateName;
+      document.getElementById('candidateRoleTitle').textContent = data.roleTitle;
+      document.getElementById('candidateSummaryText').textContent = data.summary;
+      document.getElementById('marketFitBadge').textContent = data.marketFit;
+      document.getElementById('overallVerdictText').textContent = data.verdict;
+
+      // Overall Score Counter & Gauge Animation
+      const scoreValEl = document.getElementById('overallScoreVal');
+      animateNumber(scoreValEl, data.overallScore, 1000);
+
+      // SVG Gauge: perimeter = 2 * PI * 42 ~= 263.89
+      const totalPerimeter = 264;
+      const gaugeCircle = document.getElementById('gaugeCircle');
+      const offset = totalPerimeter - (totalPerimeter * data.overallScore) / 100;
+      gaugeCircle.style.strokeDashoffset = offset;
+      
+      // Gauge Color
+      if (data.overallScore >= 85) {
+        gaugeCircle.style.stroke = 'var(--primary)';
+      } else if (data.overallScore >= 70) {
+        gaugeCircle.style.stroke = 'var(--warning)';
+      } else {
+        gaugeCircle.style.stroke = 'var(--danger)';
+      }
+
+      // Overall Badge
+      const statusBadge = document.getElementById('overallStatusBadge');
+      statusBadge.textContent = data.statusBadge;
+      statusBadge.className = `score-badge ${data.overallScore >= 80 ? 'high' : data.overallScore >= 70 ? 'medium' : 'low'}`;
+
+      // 4 Metric Score Values
+      animateNumber(document.getElementById('atsScoreVal'), data.atsScore, 800);
+      animateNumber(document.getElementById('skillsScoreVal'), data.skillsScore, 800);
+      animateNumber(document.getElementById('expScoreVal'), data.experienceScore, 800);
+      animateNumber(document.getElementById('formatScoreVal'), data.formattingScore, 800);
+
+      document.getElementById('atsProgressFill').style.width = `${data.atsScore}%`;
+      document.getElementById('skillsProgressFill').style.width = `${data.skillsScore}%`;
+      document.getElementById('expProgressFill').style.width = `${data.experienceScore}%`;
+      document.getElementById('formatProgressFill').style.width = `${data.formattingScore}%`;
+
+      // Detected Skills
+      const detectedWrap = document.getElementById('detectedSkillsWrap');
+      detectedWrap.innerHTML = '';
+      document.getElementById('detectedCount').textContent = data.detectedSkills.length;
+      data.detectedSkills.forEach(skill => {
+        const pill = document.createElement('span');
+        pill.className = 'skill-pill detected';
+        pill.innerHTML = `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          ${skill}
+        `;
+        detectedWrap.appendChild(pill);
+      });
+
+      // Missing Skills
+      const missingWrap = document.getElementById('missingSkillsWrap');
+      missingWrap.innerHTML = '';
+      document.getElementById('missingCount').textContent = data.missingSkills.length;
+      data.missingSkills.forEach(skill => {
+        const pill = document.createElement('span');
+        pill.className = 'skill-pill missing';
+        pill.innerHTML = `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          ${skill}
+        `;
+        missingWrap.appendChild(pill);
+      });
+
+      // Strengths
+      const strengthsList = document.getElementById('strengthsList');
+      strengthsList.innerHTML = '';
+      data.strengths.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'feedback-item';
+        li.innerHTML = `
+          <div class="feedback-icon-box strength">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div class="feedback-content">
+            <h5>${item.title}</h5>
+            <p>${item.desc}</p>
+          </div>
+        `;
+        strengthsList.appendChild(li);
+      });
+
+      // Areas for Improvement
+      const improvementsList = document.getElementById('improvementsList');
+      improvementsList.innerHTML = '';
+      data.improvements.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'feedback-item';
+        li.innerHTML = `
+          <div class="feedback-icon-box improvement">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <div class="feedback-content">
+            <h5>${item.title}</h5>
+            <p>${item.desc}</p>
+          </div>
+        `;
+        improvementsList.appendChild(li);
+      });
+
+      // ATS Keywords Cloud
+      const keywordsCloudWrap = document.getElementById('keywordsCloudWrap');
+      keywordsCloudWrap.innerHTML = '';
+      data.keywords.forEach(kw => {
+        const div = document.createElement('div');
+        div.className = 'keyword-card';
+        div.innerHTML = `
+          <span class="kw-term">${kw.term}</span>
+          <div class="kw-footer">
+            <span class="kw-status ${kw.status}">${kw.status === 'found' ? kw.count : 'Missing'}</span>
+            <span>${kw.status === 'found' ? 'Detected' : 'Recommended'}</span>
+          </div>
+        `;
+        keywordsCloudWrap.appendChild(div);
+      });
+
+      // Recommended Roles
+      const rolesListWrap = document.getElementById('rolesListWrap');
+      rolesListWrap.innerHTML = '';
+      data.recommendedRoles.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'role-card';
+        div.innerHTML = `
+          <div class="role-info">
+            <h4>${r.role}</h4>
+            <p>${r.desc}</p>
+          </div>
+          <div class="role-match-badge">
+            <span class="match-pct">${r.match}</span>
+            <span class="match-tag">Match Index</span>
+          </div>
+        `;
+        rolesListWrap.appendChild(div);
+      });
+
+      // Update Preview Strip
+      document.getElementById('previewFileName').textContent = data.fileName;
+      document.getElementById('previewFileSize').textContent = data.fileSize;
+      const isDocx = data.fileName.endsWith('.docx') || data.fileName.endsWith('.doc');
+      const badge = document.getElementById('previewExtBadge');
+      badge.textContent = isDocx ? 'DOC' : 'PDF';
+      badge.style.background = isDocx ? '#2563eb' : '#dc2626';
+      document.getElementById('filePreviewStrip').style.display = 'flex';
+    }
+
+    /* ==========================================================================
+       Drag and Drop & File Upload Handling
+       ========================================================================== */
+    function setupDragAndDrop() {
+      const dropZone = document.getElementById('dropZone');
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('dragover');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('dragover');
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          processUploadedFile(files[0]);
+        }
+      });
+    }
+
+    function triggerFileInput() {
+      document.getElementById('resumeFileInput').click();
+    }
+
+    function handleFileSelected(event) {
+      const files = event.target.files;
+      if (files.length > 0) {
+        processUploadedFile(files[0]);
+      }
+    }
+
+    function processUploadedFile(file) {
+      const validExtensions = ['pdf', 'docx', 'doc'];
+      const fileExt = file.name.split('.').pop().toLowerCase();
+      
+      if (!validExtensions.includes(fileExt)) {
+        showToast('Please upload a valid PDF or DOCX file.', 'error');
+        return;
+      }
+
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+      
+      // Update preview
+      document.getElementById('previewFileName').textContent = file.name;
+      document.getElementById('previewFileSize').textContent = sizeMB;
+      const badge = document.getElementById('previewExtBadge');
+      badge.textContent = fileExt.toUpperCase();
+      badge.style.background = (fileExt === 'docx' || fileExt === 'doc') ? '#2563eb' : '#dc2626';
+      document.getElementById('filePreviewStrip').style.display = 'flex';
+
+      showToast(`Selected "${file.name}". Click Analyze Resume to inspect.`);
+    }
+
+    function handlePresetChange(presetKey) {
+      if (RESUME_PRESETS[presetKey]) {
+        currentDataset = RESUME_PRESETS[presetKey];
+        renderDashboard(currentDataset);
+        showToast(`Loaded preset profile for ${currentDataset.candidateName}`);
+      }
+    }
+
+    function loadSampleResume(presetKey) {
+      document.getElementById('presetSelect').value = presetKey;
+      handlePresetChange(presetKey);
+    }
+
+    /* ==========================================================================
+       Simulated Deep Resume Scan Analysis
+       ========================================================================== */
+    function analyzeCurrentResume() {
+      const uploadCard = document.getElementById('uploadSection');
+      const progressContainer = document.getElementById('scannerProgress');
+      const fillBar = document.getElementById('scannerFill');
+      const statusText = document.getElementById('scannerStatusText');
+      const pctText = document.getElementById('scannerPct');
+      const btn = document.getElementById('btnAnalyzeDirect');
+
+      uploadCard.classList.add('scanning-active');
+      progressContainer.style.display = 'block';
+      btn.disabled = true;
+      btn.innerHTML = `<span style="display:inline-block; animation:spin 1s linear infinite;">⏳</span> Parsing...`;
+
+      const steps = [
+        { pct: 20, msg: "Deconstructing PDF byte stream & font tokens..." },
+        { pct: 45, msg: "Evaluating ATS keyword density & standard headings..." },
+        { pct: 75, msg: "Benchmarking experience metrics against industry models..." },
+        { pct: 95, msg: "Synthesizing recommendations & job match score..." },
+        { pct: 100, msg: "Analysis Complete!" }
+      ];
+
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+          const item = steps[currentStep];
+          fillBar.style.width = item.pct + '%';
+          pctText.textContent = item.pct + '%';
+          statusText.textContent = item.msg;
+          currentStep++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            uploadCard.classList.remove('scanning-active');
+            progressContainer.style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Analyze Resume
+            `;
+            
+            // Re-render and add to history
+            renderDashboard(currentDataset);
+            addHistoryEntry(currentDataset);
+            showToast('Analysis finished! All scores and feedback updated.');
+          }, 400);
+        }
+      }, 350);
+    }
+
+    /* ==========================================================================
+       History Management
+       ========================================================================== */
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      document.getElementById('historyCounter').textContent = historyData.length;
+
+      historyData.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight: 700;">${item.name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${item.file}</div>
+          </td>
+          <td>${item.role}</td>
+          <td>
+            <span class="score-badge ${item.score >= 85 ? 'high' : item.score >= 70 ? 'medium' : 'low'}">
+              ${item.score}/100
+            </span>
+          </td>
+          <td style="font-weight: 600; color: var(--accent);">${item.ats}%</td>
+          <td style="color: var(--text-muted); font-size: 0.78rem;">${item.date}</td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.76rem;" onclick="loadHistoryItem(${index})">
+              View Report
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addHistoryEntry(data) {
+      const newEntry = {
+        name: data.candidateName,
+        file: data.fileName,
+        role: data.roleTitle.split('(')[0].trim(),
+        score: data.overallScore,
+        ats: data.atsScore,
+        date: "Just now"
+      };
+      historyData.unshift(newEntry);
+      renderHistoryTable();
+    }
+
+    function loadHistoryItem(index) {
+      switchView('dashboard');
+      showToast(`Loaded report for ${historyData[index].name}`);
+    }
+
+    function clearHistory() {
+      historyData = [];
+      renderHistoryTable();
+      showToast('Parsing history has been cleared.');
+    }
+
+    /* ==========================================================================
+       Download / Print Report
+       ========================================================================== */
+    function downloadReport() {
+      showToast('Generating official Resume Assessment PDF...');
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+
+    /* ==========================================================================
+       Theme Toggle (Dark / Light)
+       ========================================================================== */
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', newTheme);
+
+      // Update toggles and icons
+      const themeIcon = document.getElementById('themeIcon');
+      const settingsToggle = document.getElementById('settingsThemeToggle');
+
+      if (newTheme === 'dark') {
+        themeIcon.innerHTML = `
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        `;
+        if (settingsToggle) settingsToggle.checked = true;
+      } else {
+        themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+        if (settingsToggle) settingsToggle.checked = false;
+      }
+
+      showToast(`Switched to ${newTheme} mode`);
+    }
+
+    /* ==========================================================================
+       Toast Helper
+       ========================================================================== */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    /* ==========================================================================
+       Number Counter Animation
+       ========================================================================== */
+    function animateNumber(element, target, duration = 800) {
+      if (!element) return;
+      const start = parseInt(element.textContent, 10) || 0;
+      const startTime = performance.now();
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+        const currentVal = Math.round(start + (target - start) * easeOutQuad);
+        element.textContent = currentVal;
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.textContent = target;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+  </script>
+</body>
+</html>
