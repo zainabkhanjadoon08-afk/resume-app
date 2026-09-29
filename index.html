@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ٹیکس فائلر - Tax Filer Pakistan</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <span class="logo-text">ٹیکس فائلر</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#home" class="nav-link active" data-page="home">ہوم</a>
+                <a href="#about" class="nav-link" data-page="about">تعارف</a>
+                <a href="#services" class="nav-link" data-page="services">خدمات</a>
+                <a href="#calculator" class="nav-link" data-page="calculator">ٹیکس کیلکولیٹر</a>
+                <a href="#contact" class="nav-link" data-page="contact">رابطہ</a>
+            </div>
+            <div class="nav-auth" id="navAuth">
+                <button class="btn btn-outline" onclick="showPage('login')">لاگ ان</button>
+                <button class="btn btn-primary" onclick="showPage('register')">رجسٹر کریں</button>
+            </div>
+            <div class="nav-user" id="navUser" style="display: none;">
+                <span class="user-name" id="userNameDisplay"></span>
+                <button class="btn btn-outline" onclick="showPage('dashboard')">ڈیش بورڈ</button>
+                <button class="btn btn-danger" onclick="logout()">لاگ آؤٹ</button>
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home Page -->
+        <section id="page-home" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>اپنا ٹیکس خود فائل کریں</h1>
+                    <p>پاکستان کے ٹیکس دہندگان کے لیے آسان اور آن لائن ٹیکس فائلنگ پلیٹ فارم</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-lg" onclick="showPage('register')">ابھی رجسٹر کریں</button>
+                        <button class="btn btn-outline btn-lg" onclick="showPage('login')">لاگ ان کریں</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <div class="illustration-card">
+                            <span class="illustration-icon">📊</span>
+                            <span>ٹیکس رپورٹ</span>
+                        </div>
+                        <div class="illustration-card">
+                            <span class="illustration-icon">💰</span>
+                            <span>محصول</span>
+                        </div>
+                        <div class="illustration-card">
+                            <span class="illustration-icon">📋</span>
+                            <span>فائلنگ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features">
+                <h2>ہماری خصوصیات</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🔒</span>
+                        <h3>محفوظ</h3>
+                        <p>آپ کی تمام معلومات محفوظ اور محفوظ ہے</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h3>آسان</h3>
+                        <p>چند منٹ میں اپنا ٹیکس فائل کریں</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📱</span>
+                        <h3>موبائل فرینڈلی</h3>
+                        <p>کسی بھی ڈیوائس سے استعمال کریں</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <h3>رپورٹس</h3>
+                        <p>تفصیلی ٹیکس رپورٹس حاصل کریں</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="page-about" class="page">
+            <div class="page-header">
+                <h1>ہمارے بارے میں</h1>
+                <p>ٹیکس فائلر پاکستان کے ٹیکس دہندگان کے لیے ایک مکمل آن لائن پلیٹ فارم ہے</p>
+            </div>
+            <div class="about-content">
+                <div class="about-card">
+                    <h2>ہمارا مشن</h2>
+                    <p>ہمارا مشن ٹیکس فائلنگ کو آسان اور قابل رسائی بنانا ہے۔ ہم چاہتے ہیں کہ ہر ٹیکس دہندہ بغیر کسی پیچیدگی کے اپنا ٹیکس فائل کر سکے۔</p>
+                </div>
+                <div class="about-card">
+                    <h2>ہماری ٹیم</h2>
+                    <p>ہماری ٹیم تجربہ کار ٹیکس مشیرین اور ٹیکنالوجی کے ماہرین پر مشتمل ہے جو آپ کو بہترین خدمات فراہم کرتی ہے۔</p>
+                </div>
+                <div class="about-card">
+                    <h2>ہماری تاریخ</h2>
+                    <p>2020 میں قائم ہوئی، ٹیکس فائلر نے اب تک ہزاروں ٹیکس دہندگان کی مدد کی ہے۔</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Page -->
+        <section id="page-services" class="page">
+            <div class="page-header">
+                <h1>ہماری خدمات</h1>
+                <p>ہم ٹیکس دہندگان کے لیے مکمل خدمات فراہم کرتے ہیں</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">📝</span>
+                    <h3>انکم ٹیکس فائلنگ</h3>
+                    <p>آپ کی انکم ٹیکس ریٹرن آن لائن فائل کریں</p>
+                    <ul>
+                        <li>تنخواہ کی ٹیکس</li>
+                        <li>کاروبار کی ٹیکس</li>
+                        <li>آمدنی کی ٹیکس</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🏢</span>
+                    <h3>کاروباری ٹیکس</h3>
+                    <p>کاروبار کے لیے خصوصی ٹیکس حل</p>
+                    <ul>
+                        <li>GST فائلنگ</li>
+                        <li>ویلیو ایڈڈ ٹیکس</li>
+                        <li>کاروباری ٹیکس پلاننگ</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">💼</span>
+                    <h3>پیشہ ور ٹیکس</h3>
+                    <p>پیشہ ور افراد کے لیے ٹیکس مشورہ</p>
+                    <ul>
+                        <li>فری لانسز کی ٹیکس</li>
+                        <li>مشاورتی خدمات</li>
+                        <li>ٹیکس بچائیں</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🏦</span>
+                    <h3>سیونگ ٹیکس</h3>
+                    <p>سیونگ سکیم میں ٹیکس فائل کریں</p>
+                    <ul>
+                        <li>سیونگ سکیم ٹیکس</li>
+                        <li>پنشن فنڈ ٹیکس</li>
+                        <li>انویسٹمنٹ ٹیکس</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator Page -->
+        <section id="page-calculator" class="page">
+            <div class="page-header">
+                <h1>ٹیکس کیلکولیٹر</h1>
+                <p>اپنی سالانہ ٹیکس کا حساب لگائیں</p>
+            </div>
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="annualIncome">سالانہ آمدنی (روپے)</label>
+                        <input type="number" id="annualIncome" placeholder="مثلاً 1200000" oninput="calculateTax()">
+                    </div>
+                    <div class="form-group">
+                        <label for="deductions">کٹوتیاں (روپے)</label>
+                        <input type="number" id="deductions" placeholder="مثلاً 100000" oninput="calculateTax()">
+                    </div>
+                    <div class="form-group">
+                        <label for="taxYear">ٹیکس سال</label>
+                        <select id="taxYear" onchange="calculateTax()">
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calculator-result" id="taxResult">
+                    <h3>ٹیکس کا حساب</h3>
+                    <div class="result-item">
+                        <span>کل آمدنی:</span>
+                        <span id="totalIncome">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>کٹوتیاں:</span>
+                        <span id="totalDeductions">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>قابل ٹیکس آمدنی:</span>
+                        <span id="taxableIncome">0</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span>کل ٹیکس:</span>
+                        <span id="totalTax">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>ماہانہ ٹیکس:</span>
+                        <span id="monthlyTax">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="page-contact" class="page">
+            <div class="page-header">
+                <h1>رابطہ کریں</h1>
+                <p>ہم سے رابطہ کریں، ہم آپ کی مدد کے لیے حاضر ہیں</p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📍</span>
+                        <div>
+                            <h4>پتہ</h4>
+                            <p>اسلام آباد، پاکستان</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <div>
+                            <h4>فون</h4>
+                            <p>+92 51 1234567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <div>
+                            <h4>ای میل</h4>
+                            <p>info@taxfiler.pk</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">⏰</span>
+                        <div>
+                            <h4>اوقات کار</h4>
+                            <p>پیر - جمعہ: 9AM - 5PM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>پیغام بھیجیں</h3>
+                    <form onsubmit="sendMessage(event)">
+                        <div class="form-group">
+                            <label for="contactName">نام</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">ای میل</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">موضوع</label>
+                            <input type="text" id="contactSubject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">پیغام</label>
+                            <textarea id="contactMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">بھیجیں</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="page-login" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>لاگ ان کریں</h2>
+                    <p>اپنے اکاؤنٹ میں لاگ ان کریں</p>
+                    <form onsubmit="login(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">ای میل</label>
+                            <input type="email" id="loginEmail" required placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">پاس ورڈ</label>
+                            <input type="password" id="loginPassword" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">لاگ ان</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>اکاؤنٹ نہیں ہے؟ <a href="#" onclick="showPage('register')">رجسٹر کریں</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register Page -->
+        <section id="page-register" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>رجسٹر کریں</h2>
+                    <p>اپنا ٹیکس فائلر اکاؤنٹ بنائیں</p>
+                    <form onsubmit="register(event)">
+                        <div class="form-group">
+                            <label for="regName">مکمل نام</label>
+                            <input type="text" id="regName" required placeholder="محمد احمد">
+                        </div>
+                        <div class="form-group">
+                            <label for="regEmail">ای میل</label>
+                            <input type="email" id="regEmail" required placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="regCnic">CNIC نمبر</label>
+                            <input type="text" id="regCnic" required placeholder="35201-1234567-8" pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}">
+                        </div>
+                        <div class="form-group">
+                            <label for="regPhone">فون نمبر</label>
+                            <input type="tel" id="regPhone" required placeholder="0300-1234567">
+                        </div>
+                        <div class="form-group">
+                            <label for="regPassword">پاس ورڈ</label>
+                            <input type="password" id="regPassword" required minlength="8" placeholder="کم از کم 8 حروف">
+                        </div>
+                        <div class="form-group">
+                            <label for="regConfirmPassword">پاس ورڈ کی تصدیق</label>
+                            <input type="password" id="regConfirmPassword" required placeholder="دوبارہ پاس ورڈ لکھیں">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">رجسٹر کریں</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>پہلے سے اکاؤنٹ ہے؟ <a href="#" onclick="showPage('login')">لاگ ان کریں</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Page -->
+        <section id="page-dashboard" class="page">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h1>ڈیش بورڈ</h1>
+                    <p>خوش آمدید، <span id="dashboardUserName"></span></p>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>اکاؤنٹ کی معلومات</h3>
+                        <div class="info-item">
+                            <span>نام:</span>
+                            <span id="dashName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span>CNIC:</span>
+                            <span id="dashCnic">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span>ای میل:</span>
+                            <span id="dashEmail">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span>فون:</span>
+                            <span id="dashPhone">-</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>ٹیکس کی تاریخ</h3>
+                        <div id="taxHistory">
+                            <p class="no-data">ابھی تک کوئی ٹیکس فائل نہیں کی گئی</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>نئی ٹیکس فائل</h3>
+                        <p>نئی ٹیکس فائل بنانے کے لیے نیچے بٹن دبائیں</p>
+                        <button class="btn btn-primary" onclick="showPage('newFiling')">نئی فائلنگ</button>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>ٹیکس کیلکولیٹر</h3>
+                        <p>اپنی ٹیکس کا حساب لگائیں</p>
+                        <button class="btn btn-outline" onclick="showPage('calculator')">کیلکولیٹر</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Filing Page -->
+        <section id="page-newFiling" class="page">
+            <div class="filing-container">
+                <div class="filing-header">
+                    <h1>نئی ٹیکس فائلنگ</h1>
+                    <p>اپنی ٹیکس ریٹرن آن لائن فائل کریں</p>
+                </div>
+                <form class="filing-form" onsubmit="submitFiling(event)">
+                    <div class="form-section">
+                        <h3>بنیادی معلومات</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="filingYear">ٹیکس سال</label>
+                                <select id="filingYear" required>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filingType">فائلنگ کی قسم</label>
+                                <select id="filingType" required>
+                                    <option value="salary">تنخواہ</option>
+                                    <option value="business">کاروبار</option>
+                                    <option value="freelance">فری لانس</option>
+                                    <option value="other">دیگر</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3>آمدنی کی تفصیل</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="basicSalary">بنیادی تنخواہ (سالانہ)</label>
+                                <input type="number" id="basicSalary" required oninput="calculateFilingTax()">
+                            </div>
+                            <div class="form-group">
+                                <label for="allowances">الاؤنسز (سالانہ)</label>
+                                <input type="number" id="allowances" value="0" oninput="calculateFilingTax()">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bonus">بونس (سالانہ)</label>
+                                <input type="number" id="bonus" value="0" oninput="calculateFilingTax()">
+                            </div>
+                            <div class="form-group">
+                                <label for="otherIncome">دیگر آمدنی (سالانہ)</label>
+                                <input type="number" id="otherIncome" value="0" oninput="calculateFilingTax()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3>کٹوتیاں</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="zakat">زکوٰۃ</label>
+                                <input type="number" id="zakat" value="0" oninput="calculateFilingTax()">
+                            </div>
+                            <div class="form-group">
+                                <label for="charity">صدقہ/خیرات</label>
+                                <input type="number" id="charity" value="0" oninput="calculateFilingTax()">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="insurance">انشورنس پریمیم</label>
+                                <input type="number" id="insurance" value="0" oninput="calculateFilingTax()">
+                            </div>
+                            <div class="form-group">
+                                <label for="otherDeductions">دیگر کٹوتیاں</label>
+                                <input type="number" id="otherDeductions" value="0" oninput="calculateFilingTax()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filing-summary">
+                        <h3>خلاصہ</h3>
+                        <div class="summary-item">
+                            <span>کل آمدنی:</span>
+                            <span id="filingTotalIncome">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>کل کٹوتیاں:</span>
+                            <span id="filingTotalDeductions">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>قابل ٹیکس آمدنی:</span>
+                            <span id="filingTaxableIncome">0</span>
+                        </div>
+                        <div class="summary-item highlight">
+                            <span>کل ٹیکس:</span>
+                            <span id="filingTotalTax">0</span>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-lg">فائل جمع کرائیں</button>
+                        <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">منسوخ</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>ٹیکس فائلر</h3>
+                <p>پاکستان کے ٹیکس دہندگان کے لیے آن لائن ٹیکس فائلنگ پلیٹ فارم</p>
+            </div>
+            <div class="footer-section">
+                <h4>فوری لنکس</h4>
+                <ul>
+                    <li><a href="#" onclick="showPage('home')">ہوم</a></li>
+                    <li><a href="#" onclick="showPage('about')">تعارف</a></li>
+                    <li><a href="#" onclick="showPage('services')">خدمات</a></li>
+                    <li><a href="#" onclick="showPage('contact')">رابطہ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>خدمات</h4>
+                <ul>
+                    <li><a href="#">انکم ٹیکس</a></li>
+                    <li><a href="#">کاروباری ٹیکس</a></li>
+                    <li><a href="#">پیشہ ور ٹیکس</a></li>
+                    <li><a href="#">سیونگ ٹیکس</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>رابطہ</h4>
+                <p>📍 اسلام آباد، پاکستان</p>
+                <p>📞 +92 51 1234567</p>
+                <p>📧 info@taxfiler.pk</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 ٹیکس فائلر۔ جملہ حقوق محفوظ ہیں۔</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
